@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  client: one
+  total: 9.99
+  status: MyString
+  placed_at: 2025-01-28 19:21:46
+
+two:
+  client: two
+  total: 9.99
+  status: MyString
+  placed_at: 2025-01-28 19:21:46

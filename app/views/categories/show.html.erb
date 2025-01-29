@@ -9,7 +9,7 @@
       </p>
       <div class="d-flex justify-content-between">
         <%= link_to 'Edit', edit_category_path(@category), class: "btn btn-warning" %>
-        <%= link_to 'Delete', @category, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+        <%= button_to 'Delete', @category, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
         <%= link_to 'Back to Categories', categories_path, class: "btn btn-secondary" %>
       </div>
     </div>

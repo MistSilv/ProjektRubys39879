@@ -21,18 +21,30 @@ class OrdersController < ApplicationController
 
   # POST /orders or /orders.json
   def create
-    @order = Order.new(order_params)
+    @order = Order.new(order_params.except(:product_ids, :quantities))
+    selected_products = Product.where(id: params[:order][:product_ids])
 
-    respond_to do |format|
-      if @order.save
-        format.html { redirect_to @order, notice: "Order was successfully created." }
-        format.json { render :show, status: :created, location: @order }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+    product_quantities = params[:order][:quantities].to_enum.to_h.map { |key, value| [key.to_i, value.to_i] }.to_enum.to_h
+
+    total_price = 0
+    selected_products.each do |product|
+      quantity = product_quantities[product.id] || 1 # Default quantity to 1 if not provided
+      total_price += product.price * quantity
+    end
+    @order.total = total_price
+
+    if @order.save
+
+      selected_products.each do |product|
+        quantity = product_quantities[product.id] || 1
+        OrderProduct.create(order: @order, product: product, quantity: quantity)
       end
+      redirect_to @order, notice: 'Order was successfully created.'
+    else
+      render :new, status: :unprocessable_entity
     end
   end
+
 
   # PATCH/PUT /orders/1 or /orders/1.json
   def update
@@ -58,13 +70,15 @@ class OrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_order
       @order = Order.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
+
     def order_params
+      params.require(:order).permit(:client_id, product_ids: [], quantities: [:id, :quantity])
+      params.require(:order).permit(:client_id, :status, :placed_at)
       params.require(:order).permit(:client_id, :total, :status, :placed_at)
     end
 end

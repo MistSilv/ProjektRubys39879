@@ -5,6 +5,13 @@
   </div>
 
   <div class="mb-3">
+    <%= form.label :status, class: "form-label" %>
+    <%= form.select :status, ["Pending", "Processing", "Completed", "Cancelled"], selected: @order.status || "Pending", class: "form-select", required: true %>
+  </div>
+
+
+
+  <div class="mb-3">
     <label for="category-filter" class="form-label">Filter Products by Category</label>
     <select id="category-filter" class="form-select">
       <option value="">All Categories</option>
@@ -14,19 +21,22 @@
     </select>
   </div>
 
+
   <div class="mb-3">
     <label class="form-label">Select Products</label>
     <div id="product-list" class="form-group">
       <% Product.all.each do |product| %>
-        <div class="form-check product-item" data-category-id="<%= product.category_id %>">
+        <div class="product-item" data-category-id="<%= product.category_id %>">
           <input class="form-check-input product-checkbox" type="checkbox" value="<%= product.id %>" data-price="<%= product.price %>" id="product_<%= product.id %>" name="order[product_ids][]">
           <label class="form-check-label" for="product_<%= product.id %>">
             <%= product.name %> - <%= number_to_currency(product.price) %>
           </label>
+          <input type="number" class="form-control quantity-input" name="order[quantities][<%= product.id %>]" min="1" value="1" style="width: 80px; display: inline-block;" disabled>
         </div>
       <% end %>
     </div>
   </div>
+
 
   <div class="mb-3">
     <label class="form-label">Total Price</label>

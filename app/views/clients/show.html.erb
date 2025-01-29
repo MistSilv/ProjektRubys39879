@@ -11,7 +11,7 @@
       </p>
       <div class="d-flex justify-content-between">
         <%= link_to 'Edit', edit_client_path(@client), class: "btn btn-warning" %>
-        <%= link_to 'Delete', @client, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+        <%= button_to 'Delete', @client, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
         <%= link_to 'Back to Clients', clients_path, class: "btn btn-secondary" %>
       </div>
     </div>

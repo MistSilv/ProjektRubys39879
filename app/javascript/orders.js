@@ -4,19 +4,37 @@ document.addEventListener("DOMContentLoaded", () => {
     const productItems = document.querySelectorAll(".product-item");
     const totalPriceField = document.getElementById("total-price");
 
-    // Update the total price when products are selected
+    // Update total price
     const updateTotalPrice = () => {
         let total = 0;
         productCheckboxes.forEach((checkbox) => {
             if (checkbox.checked) {
-                total += parseFloat(checkbox.dataset.price);
+                const quantity = parseInt(checkbox.closest(".product-item").querySelector(".quantity-input").value);
+                total += parseFloat(checkbox.dataset.price) * quantity;
             }
         });
         totalPriceField.value = `$${total.toFixed(2)}`;
     };
 
+    // Enable/disable quantity input
+    productCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", (event) => {
+            const quantityInput = event.target.closest(".product-item").querySelector(".quantity-input");
+            quantityInput.disabled = !event.target.checked;
+            if (!event.target.checked) {
+                quantityInput.value = 1; // Reset quantity when unchecked
+            }
+            updateTotalPrice();
+        });
+    });
+
+    // Update total price when quantity changes
+    document.querySelectorAll(".quantity-input").forEach((input) => {
+        input.addEventListener("input", updateTotalPrice);
+    });
+
     // Filter products by category
-    const filterProducts = () => {
+    categoryFilter.addEventListener("change", () => {
         const selectedCategory = categoryFilter.value;
         productItems.forEach((item) => {
             if (selectedCategory === "" || item.dataset.categoryId === selectedCategory) {
@@ -25,11 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 item.style.display = "none";
             }
         });
-    };
-
-    // Attach event listeners
-    productCheckboxes.forEach((checkbox) => checkbox.addEventListener("change", updateTotalPrice));
-    categoryFilter.addEventListener("change", filterProducts);
+    });
 
     // Initialize total price
     updateTotalPrice();

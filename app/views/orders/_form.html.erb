@@ -1,37 +1,40 @@
-<%= form_with(model: order) do |form| %>
-  <% if order.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
+<%= form_with(model: order, local: true, class: "needs-validation") do |form| %>
+  <div class="mb-3">
+    <%= form.label :client_id, "Client", class: "form-label" %>
+    <%= form.collection_select(:client_id, Client.all, :id, :name, prompt: "Select a Client", class: "form-select", required: true) %>
+  </div>
 
-      <ul>
-        <% order.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+  <div class="mb-3">
+    <label for="category-filter" class="form-label">Filter Products by Category</label>
+    <select id="category-filter" class="form-select">
+      <option value="">All Categories</option>
+      <% Category.all.each do |category| %>
+        <option value="<%= category.id %>"><%= category.name %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Select Products</label>
+    <div id="product-list" class="form-group">
+      <% Product.all.each do |product| %>
+        <div class="form-check product-item" data-category-id="<%= product.category_id %>">
+          <input class="form-check-input product-checkbox" type="checkbox" value="<%= product.id %>" data-price="<%= product.price %>" id="product_<%= product.id %>" name="order[product_ids][]">
+          <label class="form-check-label" for="product_<%= product.id %>">
+            <%= product.name %> - <%= number_to_currency(product.price) %>
+          </label>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-
-  <div>
-    <%= form.label :client_id, style: "display: block" %>
-    <%= form.text_field :client_id %>
   </div>
 
-  <div>
-    <%= form.label :total, style: "display: block" %>
-    <%= form.text_field :total %>
+  <div class="mb-3">
+    <label class="form-label">Total Price</label>
+    <input type="text" id="total-price" class="form-control" readonly>
   </div>
 
-  <div>
-    <%= form.label :status, style: "display: block" %>
-    <%= form.text_field :status %>
-  </div>
-
-  <div>
-    <%= form.label :placed_at, style: "display: block" %>
-    <%= form.datetime_field :placed_at %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="d-flex justify-content-between">
+    <%= form.submit "Create Order", class: "btn btn-success" %>
+    <%= link_to 'Cancel', orders_path, class: "btn btn-secondary" %>
   </div>
 <% end %>

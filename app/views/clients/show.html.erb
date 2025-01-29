@@ -1,10 +1,19 @@
-<p style="color: green"><%= notice %></p>
+<div class="container mt-5">
+  <h1 class="text-center">Client Details</h1>
 
-<%= render @client %>
-
-<div>
-  <%= link_to "Edit this client", edit_client_path(@client) %> |
-  <%= link_to "Back to clients", clients_path %>
-
-  <%= button_to "Destroy this client", @client, method: :delete %>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><%= @client.name %></h5>
+      <p class="card-text">
+        <strong>Email:</strong> <%= @client.email %><br>
+        <strong>Phone:</strong> <%= @client.phone %><br>
+        <strong>Address:</strong> <%= @client.address %>
+      </p>
+      <div class="d-flex justify-content-between">
+        <%= link_to 'Edit', edit_client_path(@client), class: "btn btn-warning" %>
+        <%= link_to 'Delete', @client, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+        <%= link_to 'Back to Clients', clients_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
 </div>

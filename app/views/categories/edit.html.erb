@@ -1,12 +1,9 @@
-<% content_for :title, "Editing category" %>
+<div class="container mt-5">
+  <h1 class="text-center">Edit Category</h1>
 
-<h1>Editing category</h1>
+  <div class="mb-3">
+    <%= link_to 'Back to Categories', categories_path, class: "btn btn-secondary" %>
+  </div>
 
-<%= render "form", category: @category %>
-
-<br>
-
-<div>
-  <%= link_to "Show this category", @category %> |
-  <%= link_to "Back to categories", categories_path %>
+  <%= render 'form', category: @category %>
 </div>
